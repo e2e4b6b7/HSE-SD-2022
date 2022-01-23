@@ -99,6 +99,7 @@ data class, содержащий информацию о команде прис
 ## CommandRun
 data class, содержащий информацию о вызове внешней или встроенной команды
 
+## Описание работы
 Вначале происходит конструирование `SShell`’a. Для этого вначале мы регистрируем в `BuiltinCommandEnvironment`
 встроенные функции (echo, wc и т д). Далее создается `ExternalCommandEnvironment`, в который добавляются базовые пути
 для поиска внешних ресурсов (/usr/local/sbin, /usr/local/bin, /usr/sbin, /usr/bin, /sbin, /bin)
