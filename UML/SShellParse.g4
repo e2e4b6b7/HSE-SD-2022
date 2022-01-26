@@ -8,10 +8,10 @@ prog : stmt (StmtDel stmt)*;
 
 stmt : task (PipeDel task)*;
 
-task : Whitespace? (assn | cmd) Whitespace?;
+task : assn | cmd;
 
 cmd : (Whitespace | String | Subst | quote)+;
 
-quote : QuoteBegin (String | Subst)* QuoteEnd;
+assn : Whitespace? Assn (Subst | String | quote)+ Whitespace?;
 
-assn : Assn (Subst | String | quote)+;
+quote : QuoteBegin (String | Subst)* QuoteEnd;
