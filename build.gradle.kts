@@ -22,4 +22,11 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
+    dependsOn("generateGrammarSource")
+}
+
+tasks.generateGrammarSource {
+    arguments.add("-package")
+    arguments.add("ru.hse.sd.parser.antlr")
+    outputDirectory = File("$buildDir/generated-src/antlr/main/ru/hse/sd/parser/antlr/")
 }
