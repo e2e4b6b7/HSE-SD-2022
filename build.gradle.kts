@@ -37,6 +37,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.generateGrammarSource {
+    arguments.add("-no-listener")
     arguments.add("-package")
     arguments.add("ru.hse.sd.parser.antlr")
     outputDirectory = File("$buildDir/generated-src/antlr/main/ru/hse/sd/parser/antlr/")
