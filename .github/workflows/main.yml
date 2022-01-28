@@ -27,12 +27,12 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v2
-            - name: Setup JRE
+            - name: Setup JDK
               uses: actions/setup-java@v2.3.1
               with:
                   java-version: 11
                   distribution: adopt
-                  java-package: jre
+                  java-package: jdk
             - name: Cache Gradle packages
               uses: actions/cache@v1
               with:
@@ -50,12 +50,12 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v2
-            - name: Setup JRE
+            - name: Setup JDK
               uses: actions/setup-java@v2.3.1
               with:
                   java-version: 11
                   distribution: adopt
-                  java-package: jre
+                  java-package: jdk
             - name: Cache Gradle packages
               uses: actions/cache@v1
               with:
