@@ -7,19 +7,17 @@ class VariableEnvironment() {
         nameToValue.putAll(initial)
     }
 
-    operator fun get(name: String): String = nameToValue[name] ?: ""
+    operator fun get(name: String): String? = nameToValue[name]
 
     operator fun set(name: String, value: String) {
-        if (value == "") {
-            nameToValue.remove(name)
-        } else {
-            nameToValue[name] = value
-        }
+        nameToValue[name] = value
     }
 
-    fun fork(): VariableEnvironment {
-        return VariableEnvironment(nameToValue)
+    fun remove(name: String) {
+        nameToValue.remove(name)
     }
+
+    fun fork(): VariableEnvironment = VariableEnvironment(nameToValue)
 
     val mapView: Map<String, String> = nameToValue
 }
