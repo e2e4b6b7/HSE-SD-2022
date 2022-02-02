@@ -1,4 +1,4 @@
-package ru.hse.sd
+package ru.hse.sd.env
 
 class VariableEnvironment() {
     private val nameToValue = mutableMapOf<String, String>()
