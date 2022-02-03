@@ -1,9 +1,6 @@
 package ru.hse.sd.cmd
 
 import ru.hse.sd.IO
-import java.io.PipedInputStream
-import java.io.PipedOutputStream
-import java.nio.channels.Pipe
 import java.nio.file.Path
 
 class ExternalProcess(private val executable: Path) : Command {
