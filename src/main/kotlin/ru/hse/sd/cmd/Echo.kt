@@ -4,7 +4,7 @@ import ru.hse.sd.IO
 
 object Echo : Command {
     override fun eval(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
-        args.forEach { io.outputStream.write(it.toByteArray()) }
+        io.outputStream.write(args.joinToString(separator = " ").toByteArray())
         return ReturnCode.success
     }
 }
