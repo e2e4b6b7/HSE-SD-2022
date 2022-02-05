@@ -17,6 +17,7 @@ class Runner(
     /**
      * Runs [statement] and using [io] for getting input for first [Task] and
      * output for last [Task] of [statement]
+     * Returns true if CLI has to be stopped (statement wasn't executed successed, false otherwise
      */
     fun run(statement: Statement, io: IO): Boolean {
         if (statement.tasks.isEmpty()) {
