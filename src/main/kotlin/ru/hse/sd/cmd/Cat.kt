@@ -2,15 +2,26 @@ package ru.hse.sd.cmd
 
 import ru.hse.sd.IO
 import ru.hse.sd.write
+import java.nio.file.Path
 
 object Cat: Command {
     override fun eval(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
-        if (args.size != 1) {
-            io.errorStream.write("Cat ")
-            return ReturnCode(1)
+        if (args.isNotEmpty()) {
+            val currentDirectoryName = System.getProperty("user.dir")
+            val fileName = args[0]
+            val file = Path.of(currentDirectoryName, fileName).toFile()
+            if (!file.exists()) {
+                io.errorStream.write("No such file $fileName")
+                return ReturnCode(1)
+            }
+            if (!file.isFile) {
+                io.errorStream.write("$fileName is not a file")
+                return ReturnCode(1)
+            }
+            io.outputStream.write(file.readBytes())
+            return ReturnCode.success
         }
-        // TODO
-        args.forEach { io.outputStream.write(it.toByteArray()) }
-        return ReturnCode(0)
+        io.outputStream.write(io.inputStream.readAllBytes())
+        return ReturnCode.success
     }
 }
