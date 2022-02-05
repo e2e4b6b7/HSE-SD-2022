@@ -4,7 +4,7 @@ import ru.hse.sd.IO
 import java.nio.file.Path
 
 class ExternalProcess(private val executable: Path) : Command {
-    override fun eval(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
+    override fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
         val process = ProcessBuilder().apply {
             command(executable.toAbsolutePath().toString())
             command().addAll(args)

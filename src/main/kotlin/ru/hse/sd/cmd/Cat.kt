@@ -5,7 +5,7 @@ import ru.hse.sd.write
 import java.nio.file.Path
 
 object Cat: Command {
-    override fun eval(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
+    override fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
         if (args.isNotEmpty()) {
             val currentDirectoryName = System.getProperty("user.dir")
             val fileName = args[0]

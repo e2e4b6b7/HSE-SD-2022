@@ -10,7 +10,7 @@ class UserInteraction(private val inputStream: InputStream = System.`in`,
     }
 
     fun read(): String {
-        outputStream.write(Companion.COMMAND_LINE_PREFIX)
+        outputStream.write(COMMAND_LINE_PREFIX)
         return inputStream.readBytes().toString()
     }
 }
