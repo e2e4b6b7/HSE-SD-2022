@@ -7,6 +7,7 @@ import ru.hse.sd.merge
 import ru.hse.sd.parser.antlr.SShellLex
 import ru.hse.sd.parser.antlr.SShellParse
 
+/** Bash like CLI parser */
 class Parser {
     fun parse(code: String): List<Statement> {
         val charStream = CharStreams.fromString(code)
