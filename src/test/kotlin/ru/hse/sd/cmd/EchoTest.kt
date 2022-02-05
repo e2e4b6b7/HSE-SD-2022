@@ -3,7 +3,7 @@ package ru.hse.sd.cmd
 import org.junit.jupiter.api.Test
 import kotlin.test.assertSame
 
-class EchoTest {
+internal class EchoTest {
     @Test
     fun `test not empty input stream`() {
         val testIO = IO("some input")

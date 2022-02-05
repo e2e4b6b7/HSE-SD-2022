@@ -7,7 +7,17 @@ import ru.hse.sd.parser.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
-class Runner(private val cmdEnv: List<CommandEnvironment>, private val varEnv: VariableEnvironment) {
+/** Class for running one task or pipe of tasks */
+class Runner(
+    /** Environments of commands, where calling commands are searched */
+    private val cmdEnv: List<CommandEnvironment>,
+    /** Contains all environment variables */
+    private val varEnv: VariableEnvironment
+) {
+    /**
+     * Runs [statement] and using [io] for getting input for first [Task] and
+     * output for last [Task] of [statement]
+     */
     fun run(statement: Statement, io: IO): Boolean {
         if (statement.tasks.isEmpty()) {
             return false
