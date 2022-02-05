@@ -8,7 +8,7 @@ class EchoTest {
     fun `test not empty input stream`() {
         val testIO = IO("some input")
         val cmdRes = Echo.execute(mapOf(), listOf(), testIO)
-        testIO.checkStreams("", "")
+        testIO.checkStreams("\n", "")
         assertSame(ReturnCode.success, cmdRes)
     }
 
@@ -16,7 +16,7 @@ class EchoTest {
     fun `test 0 arguments`() {
         val testIO = IO("")
         val cmdRes = Echo.execute(mapOf(), listOf(), testIO)
-        testIO.checkStreams("", "")
+        testIO.checkStreams("\n", "")
         assertSame(ReturnCode.success, cmdRes)
     }
 
@@ -24,7 +24,7 @@ class EchoTest {
     fun `test 1 argument`() {
         val testIO = IO("")
         val cmdRes = Echo.execute(mapOf(), listOf("arg1"), testIO)
-        testIO.checkStreams("arg1", "")
+        testIO.checkStreams("arg1\n", "")
         assertSame(ReturnCode.success, cmdRes)
     }
 
@@ -32,7 +32,7 @@ class EchoTest {
     fun `test 2 arguments`() {
         val testIO = IO("")
         val cmdRes = Echo.execute(mapOf(), listOf("arg1", "arg2"), testIO)
-        testIO.checkStreams("arg1 arg2", "")
+        testIO.checkStreams("arg1 arg2\n", "")
         assertSame(ReturnCode.success, cmdRes)
     }
 }
