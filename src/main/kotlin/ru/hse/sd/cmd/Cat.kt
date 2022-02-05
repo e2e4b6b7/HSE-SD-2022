@@ -7,9 +7,8 @@ import java.nio.file.Path
 object Cat: Command {
     override fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
         if (args.isNotEmpty()) {
-            val currentDirectoryName = System.getProperty("user.dir")
             val fileName = args[0]
-            val file = Path.of(currentDirectoryName, fileName).toFile()
+            val file = Path.of(fileName).toFile()
             if (!file.exists()) {
                 io.errorStream.write("No such file $fileName")
                 return ReturnCode(1)
