@@ -3,7 +3,7 @@ package ru.hse.sd.cmd
 import ru.hse.sd.IO
 import ru.hse.sd.write
 
-class Pwd: Command {
+object Pwd : Command {
     override fun eval(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
         // TODO validate function for arguments in all classes that implements Command (?)
         if (args.isNotEmpty()) {
@@ -11,6 +11,6 @@ class Pwd: Command {
             return ReturnCode(1)
         }
         io.outputStream.write(System.getProperty("user.dir"))
-        return ReturnCode(0)
+        return ReturnCode.success
     }
 }
