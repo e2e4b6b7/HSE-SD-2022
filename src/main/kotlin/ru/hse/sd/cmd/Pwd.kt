@@ -11,6 +11,7 @@ object Pwd : Command {
             return ReturnCode(1)
         }
         io.outputStream.write(System.getProperty("user.dir"))
+        io.outputStream.write('\n'.code)
         return ReturnCode.success
     }
 }

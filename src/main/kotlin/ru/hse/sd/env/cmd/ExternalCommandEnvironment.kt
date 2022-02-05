@@ -4,7 +4,8 @@ import ru.hse.sd.cmd.Command
 import ru.hse.sd.cmd.ExternalProcess
 import java.io.File
 
-class ExternalCommandEnvironment(private val paths: MutableList<String>): CommandEnvironment {
+class ExternalCommandEnvironment(paths: List<String>) : CommandEnvironment {
+    private val paths = paths.toMutableList()
 
     override fun getCommand(commandName: String): Command? {
         for (path in paths) {

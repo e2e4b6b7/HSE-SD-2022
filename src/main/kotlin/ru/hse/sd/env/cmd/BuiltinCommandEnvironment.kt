@@ -2,14 +2,15 @@ package ru.hse.sd.env.cmd
 
 import ru.hse.sd.cmd.*
 
-object BuiltinCommandEnvironment : CommandEnvironment {
-    private val builtinCommand = mapOf(
-        Pair("echo", Echo),
-        Pair("exit", ExitCommand)
-    )
+class BuiltinCommandEnvironment : CommandEnvironment {
+    private val commands = mutableMapOf<String, Command>()
+
+    fun registerCommand(name: String, cmd: Command) {
+        commands[name] = cmd
+    }
 
     override fun getCommand(commandName: String): Command? {
-        return builtinCommand[commandName]
+        return commands[commandName]
     }
 }
 

@@ -8,36 +8,49 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 class Runner(private val cmdEnv: List<CommandEnvironment>, private val varEnv: VariableEnvironment) {
-    fun run(statement: Statement, io: IO) {
+    fun run(statement: Statement, io: IO): Boolean {
         if (statement.tasks.isEmpty()) {
-            return
+            return false
         }
         if (statement.tasks.size == 1) {
-            runCommand(statement.tasks.first(), io)
-            return
+            val result = checkResult(runCommand(statement.tasks.first(), io), io)
+            return result ?: false
         }
         var curOut = ByteArrayOutputStream()
         var curIo = IO(io.inputStream, curOut, io.errorStream)
         for (task in statement.tasks) {
-            val result = runCommand(task, curIo)
-            if (!(result is ReturnCode && result == ReturnCode.success)) {
-                return
-            }
+            val result = checkResult(runCommand(task, curIo), curIo)
+            if (result != null) return result
             val nextIn = ByteArrayInputStream(curOut.toByteArray())
             curOut = ByteArrayOutputStream()
             curIo = IO(nextIn, curOut, io.errorStream)
         }
         io.outputStream.write(curOut.toByteArray())
+        return false
+    }
+
+    private fun checkResult(result: CommandResult?, io: IO): Boolean? {
+        return when (result) {
+            null -> {
+                io.errorStream.write("Command not found")
+                false
+            }
+            is Exit -> true
+            is ReturnCode -> {
+                if (result != ReturnCode.success) {
+                    io.errorStream.write("Command failed")
+                    false
+                } else {
+                    null
+                }
+            }
+        }
     }
 
     private fun runCommand(task: Task, io: IO): CommandResult? {
         when (task) {
             is CommandRun -> {
-                val command = cmdEnv.firstNotNullOfOrNull { it.getCommand(task.name) }
-                if (command == null) {
-                    io.errorStream.write("Unknown command")
-                    return null
-                }
+                val command = cmdEnv.firstNotNullOfOrNull { it.getCommand(task.name) } ?: return null
                 return command.execute(varEnv.mapView, task.args, io)
             }
             is Assignment -> {
