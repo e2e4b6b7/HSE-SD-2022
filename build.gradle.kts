@@ -4,9 +4,14 @@ plugins {
     kotlin("jvm") version "1.6.0"
     jacoco
     antlr
+    application
 }
 
 group = "ru.hse.sd"
+application {
+    mainClass.set("ru.hse.sd.MainKt")
+}
+
 
 repositories {
     mavenCentral()
@@ -42,4 +47,17 @@ tasks.generateGrammarSource {
     arguments.add("-package")
     arguments.add("ru.hse.sd.parser.antlr")
     outputDirectory = File("$buildDir/generated-src/antlr/main/ru/hse/sd/parser/antlr/")
+}
+
+
+tasks.register("SShellJar", type = Jar::class) {
+    archiveBaseName.set("${project.name}")
+    manifest {                                               
+        attributes["Main-Class"] = "ru.hse.sd.MainKt"
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks["jar"] as CopySpec)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    dependsOn("build")
 }
