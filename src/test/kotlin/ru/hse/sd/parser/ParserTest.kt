@@ -80,4 +80,11 @@ internal class ParserTest {
         )
         checkParser(input, expected)
     }
+
+    @Test
+    fun `test parser empty statement`() {
+        val input = " "
+        val expected = listOf(stmt())
+        checkParser(input, expected)
+    }
 }

@@ -19,10 +19,10 @@ class Parser {
     }
 
     private fun transformStmt(stmt: SShellParse.StmtContext): Statement {
-        return Statement(stmt.task().map(this::transformTask))
+        return Statement(stmt.task().mapNotNull(this::transformTask))
     }
 
-    private fun transformTask(task: SShellParse.TaskContext): Task {
+    private fun transformTask(task: SShellParse.TaskContext): Task? {
         task.assn()?.let {
             return transformAssn(it)
         }
@@ -32,7 +32,7 @@ class Parser {
         error("Unknown task option")
     }
 
-    private fun transformCmd(cmd: SShellParse.CmdContext): CommandRun {
+    private fun transformCmd(cmd: SShellParse.CmdContext): CommandRun? {
         val values = mutableListOf<String>()
         val lastValue = mutableListOf<String>()
         for (child in cmd.children) {
@@ -58,6 +58,9 @@ class Parser {
         if (lastValue.isNotEmpty()) {
             values.add(lastValue.merge())
         }
+
+        if (values.isEmpty()) return null
+
         val commandName = values[0]
         values.removeAt(0)
         return CommandRun(commandName, values)
