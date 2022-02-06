@@ -13,5 +13,4 @@ class PwdTest {
         testIO.checkStreams(Path.of("").toAbsolutePath().toString() + "\n", "")
         assertSame(ReturnCode.success, cmdRes)
     }
-
 }
