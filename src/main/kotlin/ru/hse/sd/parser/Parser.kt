@@ -7,8 +7,13 @@ import ru.hse.sd.merge
 import ru.hse.sd.parser.antlr.SShellLex
 import ru.hse.sd.parser.antlr.SShellParse
 
-/** Bash like CLI parser */
+/** `SShell` parser */
 class Parser {
+    /**
+     * Transform `SShell` code to list of statements.
+     *
+     * [code] `SShell` code
+     */
     fun parse(code: String): List<Statement> {
         val charStream = CharStreams.fromString(code)
         val lexer = SShellLex(charStream)
