@@ -5,6 +5,7 @@ import ru.hse.sd.env.VariableEnvironment
 import ru.hse.sd.env.cmd.*
 import ru.hse.sd.parser.Parser
 import java.io.File
+import java.io.InputStream
 
 fun getExternalCommandEnvironment(): CommandEnvironment {
     return ExternalCommandEnvironment(System.getenv("PATH").split(File.pathSeparatorChar))
@@ -32,7 +33,7 @@ fun getUserInteraction() = UserInteraction(System.`in`, System.out)
 
 fun getParser() = Parser()
 
-fun getIO() = IO(System.`in`, System.out, System.err)
+fun getIO() = IO(InputStream.nullInputStream(), System.out, System.err)
 
 fun main() {
     SShell(
