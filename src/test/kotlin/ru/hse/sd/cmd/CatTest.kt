@@ -31,6 +31,6 @@ class CatTest {
         val path = "./file-doesnt-exist"
         val cmdResult = Cat.execute(emptyMap(), listOf(path), io)
         Assertions.assertEquals(ReturnCode(1), cmdResult)
-        io.checkStreams("", "No such file $path")
+        io.checkStreams("", "No such file $path\n")
     }
 }

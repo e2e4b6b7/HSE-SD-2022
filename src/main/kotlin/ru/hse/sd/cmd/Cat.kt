@@ -5,8 +5,13 @@ import ru.hse.sd.write
 import java.io.File
 import java.nio.file.Path
 
-
+/** `cat` CLI command implementation */
 object Cat : Command {
+    /**
+     * Executes `cat` CLI command.
+     * Write content of file with the name given in [args] to output from [io].
+     * If the file is not provided, then input from [io] is used instead.
+     */
     override fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
         if (args.isNotEmpty()) {
             val file = checkedFile(args[0], io.errorStream::write) ?: return ReturnCode(1)

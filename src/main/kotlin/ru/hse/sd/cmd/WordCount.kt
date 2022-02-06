@@ -4,7 +4,14 @@ import ru.hse.sd.IO
 import ru.hse.sd.write
 import java.nio.charset.StandardCharsets
 
+/** `wc` CLI command implementation */
 object WordCount : Command {
+
+    /**
+     * Executes `wc` CLI command.
+     * Print word, line, character, and byte count of content to output stream from [io].
+     * Content may be the file, if filename is in the [args] or content from [io] input stream otherwise.
+     */
     override fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
         val str =
             if (args.isNotEmpty()) {
