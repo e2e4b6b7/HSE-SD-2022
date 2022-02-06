@@ -15,9 +15,10 @@ class Runner(
     private val varEnv: VariableEnvironment
 ) {
     /**
-     * Runs [statement] and using [io] for getting input for first [Task] and
-     * output for last [Task] of [statement]
-     * Returns true if CLI has to be stopped (statement wasn't executed successed, false otherwise
+     * Runs [statement] and using [io] for getting input stream for first [Task],
+     * output stream for last [Task] of [statement] and other streams (error stream, etc.)
+     *
+     * Returns true if CLI has to be stopped (exit was called), false otherwise.
      */
     fun run(statement: Statement, io: IO): Boolean {
         if (statement.tasks.isEmpty()) {
@@ -28,13 +29,13 @@ class Runner(
             return result ?: false
         }
         var curOut = ByteArrayOutputStream()
-        var curIo = IO(io.inputStream, curOut, io.errorStream)
+        var nextIn = io.inputStream
         for (task in statement.tasks) {
+            curOut = ByteArrayOutputStream()
+            val curIo = IO(nextIn, curOut, io.errorStream)
             val result = checkResult(runCommand(task, curIo), curIo)
             if (result != null) return result
-            val nextIn = ByteArrayInputStream(curOut.toByteArray())
-            curOut = ByteArrayOutputStream()
-            curIo = IO(nextIn, curOut, io.errorStream)
+            nextIn = ByteArrayInputStream(curOut.toByteArray())
         }
         io.outputStream.write(curOut.toByteArray())
         return false
