@@ -1,4 +1,4 @@
-package ru.hse.sd;
+package ru.hse.sd
 
 import java.io.InputStream
 import java.io.OutputStream

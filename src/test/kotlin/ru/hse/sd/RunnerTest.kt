@@ -11,11 +11,13 @@ import ru.hse.sd.parser.Parser
 import kotlin.test.assertEquals
 
 internal class RunnerTest {
-    private val cmdEnvironments = listOf<CommandEnvironment>(BuiltinCommandEnvironment().apply {
-        registerCommand("exit", ExitCommand)
-        registerCommand("echo", Echo)
-        registerCommand("cat", Cat)
-    })
+    private val cmdEnvironments = listOf<CommandEnvironment>(
+        BuiltinCommandEnvironment().apply {
+            registerCommand("exit", ExitCommand)
+            registerCommand("echo", Echo)
+            registerCommand("cat", Cat)
+        }
+    )
 
     private fun test_command(statementString: String, stopCLI: Boolean, output: String, errors: String = "") {
         val parser = Parser()

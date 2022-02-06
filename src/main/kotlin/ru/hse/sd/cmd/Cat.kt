@@ -2,8 +2,6 @@ package ru.hse.sd.cmd
 
 import ru.hse.sd.IO
 import ru.hse.sd.write
-import java.io.File
-import java.nio.file.Path
 
 /** `cat` CLI command implementation */
 object Cat : Command {

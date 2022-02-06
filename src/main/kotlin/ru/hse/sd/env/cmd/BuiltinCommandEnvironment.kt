@@ -22,4 +22,3 @@ class BuiltinCommandEnvironment : CommandEnvironment {
         return commands[commandName]
     }
 }
-
