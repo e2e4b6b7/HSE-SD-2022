@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.0"
     jacoco
     antlr
 }
@@ -15,6 +15,7 @@ repositories {
 dependencies {
     antlr("org.antlr", "antlr4", "4.9.3")
     testImplementation(kotlin("test"))
+    testImplementation("org.apache.commons", "commons-lang3", "3.12.0")
 }
 
 tasks.test {

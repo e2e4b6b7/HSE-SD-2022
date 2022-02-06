@@ -7,7 +7,7 @@ sealed interface CommandResult
 object Exit : CommandResult
 
 /** Result which contains code return from command */
-class ReturnCode(val code: Int) : CommandResult {
+data class ReturnCode(val code: Int) : CommandResult {
     companion object {
         val success = ReturnCode(0)
     }
