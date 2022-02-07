@@ -8,10 +8,6 @@ plugins {
 }
 
 group = "ru.hse.sd"
-application {
-    mainClass.set("ru.hse.sd.MainKt")
-}
-
 
 repositories {
     mavenCentral()
@@ -49,10 +45,13 @@ tasks.generateGrammarSource {
     outputDirectory = File("$buildDir/generated-src/antlr/main/ru/hse/sd/parser/antlr/")
 }
 
+application {
+    mainClass.set("ru.hse.sd.MainKt")
+}
 
-tasks.register("SShellJar", type = Jar::class) {
-    archiveBaseName.set("${project.name}")
-    manifest {                                               
+tasks.register("SShellFatJar", type = Jar::class) {
+    archiveBaseName.set(project.name)
+    manifest {
         attributes["Main-Class"] = "ru.hse.sd.MainKt"
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })

@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets
 
 /** `wc` CLI command implementation */
 object WordCount : Command {
-
     /**
      * Executes `wc` CLI command.
      * Print word, line, character, and byte count of content to output stream from [io].

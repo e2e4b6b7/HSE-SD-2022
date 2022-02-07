@@ -14,6 +14,7 @@ class ExternalCommandEnvironment(
     paths: List<String>
 ) : CommandEnvironment {
     private val paths = paths.toMutableList()
+
     /**
      * Search command with name [commandName].
      * If the command is found then return it, otherwise return null

@@ -82,8 +82,15 @@ internal class ParserTest {
     }
 
     @Test
-    fun `test parser empty statement`() {
+    fun `test parser only whitespaces`() {
         val input = " "
+        val expected = listOf(stmt())
+        checkParser(input, expected)
+    }
+
+    @Test
+    fun `test parser empty input`() {
+        val input = ""
         val expected = listOf(stmt())
         checkParser(input, expected)
     }

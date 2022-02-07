@@ -3,14 +3,14 @@
 ## Авторы
 Венедиктов Роман, Абрамов Никита, Филиппов Денис
 
-## SShell-like CLI interpreter
+## SShell CLI interpreter
 ### Сборка
 - на MacOS или Linux:
 
-  `./gradlew SShellJar`
+  `./gradlew SShellFatJar`
 - на Windows:
 
-  `.\gradlew.bat SShellJar`
+  `.\gradlew.bat SShellFatJar`
 
 ### Запуск интерпретатора
 `java -jar build/libs/SD-2022.jar`

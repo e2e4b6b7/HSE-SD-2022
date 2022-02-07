@@ -10,8 +10,8 @@ stmt : task (PipeDel task)*;
 
 task : assn | cmd;
 
-cmd : (Whitespace | String | Subst | quote)+;
+cmd : (Whitespace | String | Subst | quote)*;
 
-assn : Whitespace? Assn (Subst | String | quote)+ Whitespace?;
+assn : Whitespace? Assn (Subst | String | quote)* Whitespace?;
 
 quote : QuoteBegin (String | Subst)* QuoteEnd;

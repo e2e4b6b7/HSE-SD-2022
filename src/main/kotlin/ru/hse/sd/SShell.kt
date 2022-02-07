@@ -12,7 +12,7 @@ class SShell(
     varEnv: VariableEnvironment,
     /** Class, which interacts with user */
     private val userInteraction: UserInteraction,
-    /** Bash like CLI parser */
+    /** Query parser */
     private val parser: Parser,
     /** Container of input, output and other streams */
     private val io: IO,

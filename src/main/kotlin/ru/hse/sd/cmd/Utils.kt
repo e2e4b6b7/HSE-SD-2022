@@ -3,8 +3,9 @@ package ru.hse.sd.cmd
 import java.io.File
 import java.nio.file.Path
 
-/** Function for checking correctness of file.
- * If file located by [path] does not exits or is not a file, than [onError] callback is used
+/**
+ * Function for safe conversion path to File.
+ * If file located by [path] does not exits or is not a file, than [onError] callback is used and null returned.
  **/
 inline fun checkedFile(path: String, onError: (String) -> Unit): File? {
     val file = Path.of(path).toFile()

@@ -34,13 +34,15 @@ class Parser {
         task.cmd()?.let {
             return transformCmd(it)
         }
-        error("Unknown task option")
+        return null
     }
 
     private fun transformCmd(cmd: SShellParse.CmdContext): CommandRun? {
+        val children = cmd.children ?: return null
+
         val values = mutableListOf<String>()
         val lastValue = mutableListOf<String>()
-        for (child in cmd.children) {
+        for (child in children) {
             when (child) {
                 is TerminalNode -> {
                     when (child.symbol.type) {

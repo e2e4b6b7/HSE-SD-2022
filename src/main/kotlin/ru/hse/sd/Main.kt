@@ -7,33 +7,34 @@ import ru.hse.sd.parser.Parser
 import java.io.File
 import java.io.InputStream
 
-fun getExternalCommandEnvironment(): CommandEnvironment {
+internal fun getExternalCommandEnvironment(): CommandEnvironment {
     return ExternalCommandEnvironment(System.getenv("PATH").split(File.pathSeparatorChar))
 }
 
-fun getBuiltinCommandEnvironment(): CommandEnvironment {
+internal fun getBuiltinCommandEnvironment(): CommandEnvironment {
     val cmdEnv = BuiltinCommandEnvironment()
     cmdEnv.registerCommand("exit", ExitCommand)
     cmdEnv.registerCommand("echo", Echo)
     cmdEnv.registerCommand("pwd", Pwd)
     cmdEnv.registerCommand("cat", Cat)
+    cmdEnv.registerCommand("wc", WordCount)
     return cmdEnv
 }
 
-fun getCommandEnvironments(): List<CommandEnvironment> {
+internal fun getCommandEnvironments(): List<CommandEnvironment> {
     return listOf(
         getBuiltinCommandEnvironment(),
         getExternalCommandEnvironment()
     )
 }
 
-fun getVariableEnvironment() = VariableEnvironment()
+internal fun getVariableEnvironment() = VariableEnvironment()
 
-fun getUserInteraction() = UserInteraction(System.`in`, System.out)
+internal fun getUserInteraction() = UserInteraction(System.`in`, System.out)
 
-fun getParser() = Parser()
+internal fun getParser() = Parser()
 
-fun getIO() = IO(InputStream.nullInputStream(), System.out, System.err)
+internal fun getIO() = IO(InputStream.nullInputStream(), System.out, System.err)
 
 fun main() {
     SShell(
