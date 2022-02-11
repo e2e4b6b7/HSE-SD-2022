@@ -10,34 +10,40 @@ import ru.hse.sd.parser.antlr.SShellParse
 /** `SShell` parser */
 class Parser {
     /**
-     * Transform `SShell` code to list of statements.
+     * Transform `SShell` code to list of pre-statements.
      *
      * [code] `SShell` code
      */
-    fun parse(code: String): List<Statement> {
+    fun parse(code: String): List<PreStatement> {
         val charStream = CharStreams.fromString(code)
         val lexer = SShellLex(charStream)
         val tokensStream = CommonTokenStream(lexer)
         val parser = SShellParse(tokensStream)
-        val prog = parser.prog()
-        return prog.stmt().map(this::transformStmt)
+        return parser.prog().stmt()
     }
 
-    private fun transformStmt(stmt: SShellParse.StmtContext): Statement {
-        return Statement(stmt.task().mapNotNull(this::transformTask))
+    /**
+     * Substitutes variables in pre-statement and transform it to finalized statement.
+     */
+    fun subst(preStatement: PreStatement, variables: Map<String, String>): Statement {
+        return transformStmt(preStatement, variables)
     }
 
-    private fun transformTask(task: SShellParse.TaskContext): Task? {
+    private fun transformStmt(stmt: SShellParse.StmtContext, variables: Map<String, String>): Statement {
+        return Statement(stmt.task().mapNotNull { transformTask(it, variables) })
+    }
+
+    private fun transformTask(task: SShellParse.TaskContext, variables: Map<String, String>): Task? {
         task.assn()?.let {
-            return transformAssn(it)
+            return transformAssn(it, variables)
         }
         task.cmd()?.let {
-            return transformCmd(it)
+            return transformCmd(it, variables)
         }
         return null
     }
 
-    private fun transformCmd(cmd: SShellParse.CmdContext): CommandRun? {
+    private fun transformCmd(cmd: SShellParse.CmdContext, variables: Map<String, String>): CommandRun? {
         val children = cmd.children ?: return null
 
         val values = mutableListOf<String>()
@@ -46,19 +52,17 @@ class Parser {
             when (child) {
                 is TerminalNode -> {
                     when (child.symbol.type) {
-                        SShellParse.String -> {
-                            lastValue.add(child.text)
-                        }
                         SShellParse.Whitespace -> {
                             if (lastValue.isNotEmpty()) {
                                 values.add(lastValue.merge())
                                 lastValue.clear()
                             }
                         }
+                        else -> lastValue.add(text(child, variables))
                     }
                 }
                 is SShellParse.QuoteContext -> {
-                    lastValue.add(transformQuote(child))
+                    lastValue.add(transformQuote(child, variables))
                 }
             }
         }
@@ -73,7 +77,7 @@ class Parser {
         return CommandRun(commandName, values)
     }
 
-    private fun transformAssn(assn: SShellParse.AssnContext): Assignment {
+    private fun transformAssn(assn: SShellParse.AssnContext, variables: Map<String, String>): Assignment {
         val varName = assn.Assn().text
         val values = mutableListOf<String>()
         val childIterator = assn.children.iterator()
@@ -82,27 +86,33 @@ class Parser {
         } while (child is TerminalNode && child.symbol.type != SShellParse.Assn)
         for (child in childIterator) {
             when (child) {
-                is TerminalNode -> {
-                    if (child.symbol.type == SShellParse.String) {
-                        values.add(child.text)
-                    }
-                }
-                is SShellParse.QuoteContext -> {
-                    values.add(transformQuote(child))
-                }
+                is TerminalNode ->
+                    values.add(text(child, variables))
+                is SShellParse.QuoteContext ->
+                    values.add(transformQuote(child, variables))
             }
         }
         return Assignment(varName, values.merge())
     }
 
-    private fun transformQuote(quote: SShellParse.QuoteContext): String {
+    private fun transformQuote(quote: SShellParse.QuoteContext, variables: Map<String, String>): String {
         val values = mutableListOf<String>()
-        for (child in quote.children) {
+        for (child in quote.children.subList(1, quote.children.size - 1)) {
             check(child is TerminalNode) { "Unknown node for quote node" }
-            if (child.symbol.type == SShellParse.String) {
-                values.add(child.text)
-            }
+            values.add(text(child, variables))
         }
         return values.merge()
+    }
+
+    private fun text(node: TerminalNode, variables: Map<String, String>): String {
+        return when (node.symbol.type) {
+            SShellParse.String -> {
+                node.text
+            }
+            SShellParse.Subst -> {
+                variables[node.text] ?: ""
+            }
+            else -> error("Invalid token")
+        }
     }
 }

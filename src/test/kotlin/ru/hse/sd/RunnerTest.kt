@@ -23,7 +23,7 @@ internal class RunnerTest {
         val parser = Parser()
         val testRunner = Runner(cmdEnvironments, VariableEnvironment())
         val testIO = IO("")
-        val statement = parser.parse(statementString).first()
+        val statement = parser.subst(parser.parse(statementString).first(), emptyMap())
         assertEquals(stopCLI, testRunner.run(statement, testIO))
         testIO.checkStreams(output, errors)
     }
