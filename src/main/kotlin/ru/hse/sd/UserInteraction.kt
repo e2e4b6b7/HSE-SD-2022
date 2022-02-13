@@ -15,7 +15,7 @@ class UserInteraction(
     /** Prints CLI prefix and reads string */
     fun read(): String {
         outputStream.write(COMMAND_LINE_PREFIX)
-        return inputStream.readLine()
+        return inputStream.readLine() ?: ""
     }
 
     companion object {

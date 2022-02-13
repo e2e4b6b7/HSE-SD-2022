@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     kotlin("jvm") version "1.6.0"
@@ -21,6 +23,56 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        // set options for log level LIFECYCLE
+        events = setOf(
+            TestLogEvent.FAILED,
+            TestLogEvent.SKIPPED,
+            TestLogEvent.STANDARD_OUT
+        )
+        exceptionFormat = TestExceptionFormat.SHORT
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+
+        // set options for log level DEBUG and INFO
+        debug {
+            events = setOf(
+                TestLogEvent.FAILED,
+                TestLogEvent.PASSED,
+                TestLogEvent.SKIPPED,
+                TestLogEvent.STANDARD_OUT
+            )
+            exceptionFormat = TestExceptionFormat.FULL
+        }
+        info.events = debug.events
+        info.exceptionFormat = debug.exceptionFormat
+        addTestListener(
+            object : TestListener {
+                override fun beforeSuite(suite: TestDescriptor) = Unit
+                override fun beforeTest(testDescriptor: TestDescriptor) = Unit
+                override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) = Unit
+                override fun afterSuite(desc: TestDescriptor, result: TestResult) {
+                    if (desc.parent == null) {
+                        val output = "Results: ${result.resultType} " +
+                            "(${result.testCount} tests," +
+                            " ${result.successfulTestCount} passed," +
+                            " ${result.failedTestCount} failed," +
+                            " ${result.skippedTestCount} skipped)" +
+                            " in ${(result.endTime - result.startTime) / 1000.0} seconds"
+                        val startItem = "|  "
+                        val endItem = "  |"
+                        val repeatLength = startItem.length + output.length + endItem.length
+                        println(
+                            "\n" + "-".repeat(repeatLength) + "\n" +
+                            startItem + output + endItem + "\n" +
+                            "-".repeat(repeatLength)
+                        )
+                    }
+                }
+            }
+        )
+    }
     finalizedBy(tasks.jacocoTestReport)
 }
 
