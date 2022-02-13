@@ -21,6 +21,10 @@ class ExternalCommandEnvironment(
      * If the command is found then return it, otherwise return null
      */
     override fun getCommand(commandName: String): Command? {
+        val absFile = Path.of(commandName).toFile()
+        if (absFile.exists() && absFile.isAbsolute && absFile.isFile) {
+            return ExternalProcess(absFile.toPath())
+        }
         for (path in paths) {
             val file = Path.of(path, commandName).toFile()
             if (file.exists() && file.isFile) {

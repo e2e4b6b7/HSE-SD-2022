@@ -44,13 +44,13 @@ class Runner(
     private fun checkResult(result: CommandResult?, io: IO): Boolean? {
         return when (result) {
             null -> {
-                io.errorStream.write("Command not found")
+                io.errorStream.write("Command not found\n")
                 false
             }
             is Exit -> true
             is ReturnCode -> {
                 if (result != ReturnCode.success) {
-                    io.errorStream.write("Command failed")
+                    io.errorStream.write("Command failed\n")
                     false
                 } else {
                     null

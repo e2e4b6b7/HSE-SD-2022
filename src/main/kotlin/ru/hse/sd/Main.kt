@@ -12,8 +12,7 @@ internal fun getExternalCommandEnvironment(): CommandEnvironment {
         .split(File.pathSeparatorChar)
         .toMutableList()
         .apply {
-            add(".")
-            add("")
+            add(0,".")
         }
     return ExternalCommandEnvironment(paths)
 }

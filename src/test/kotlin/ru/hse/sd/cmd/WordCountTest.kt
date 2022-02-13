@@ -10,7 +10,7 @@ internal class WordCountTest {
         val io = IO("Hello world!\nBye,   world.\n")
         val cmdResult = WordCount.execute(emptyMap(), emptyList(), io)
         assertEquals(ReturnCode.success, cmdResult)
-        io.checkStreams("\t\t3\t\t4\t\t27")
+        io.checkStreams("\t\t3\t\t4\t\t27\n")
     }
 
     @Test
@@ -20,7 +20,7 @@ internal class WordCountTest {
             val io = IO("Hello world!\nBye,   world.\n")
             val cmdResult = WordCount.execute(emptyMap(), listOf(file.file.path), io)
             assertEquals(ReturnCode.success, cmdResult)
-            io.checkStreams("\t\t5\t\t10\t\t34")
+            io.checkStreams("\t\t5\t\t10\t\t34\n")
         }
     }
 }

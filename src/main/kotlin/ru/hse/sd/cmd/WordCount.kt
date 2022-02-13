@@ -21,6 +21,7 @@ object WordCount : Command {
             }
         val counts = count(str)
         io.outputStream.write("\t\t${counts.lines}\t\t${counts.words}\t\t${counts.symbols}")
+        io.outputStream.write('\n'.code)
         return ReturnCode.success
     }
 
