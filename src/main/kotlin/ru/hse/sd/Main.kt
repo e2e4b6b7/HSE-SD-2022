@@ -8,7 +8,14 @@ import java.io.File
 import java.io.InputStream
 
 internal fun getExternalCommandEnvironment(): CommandEnvironment {
-    return ExternalCommandEnvironment(System.getenv("PATH").split(File.pathSeparatorChar))
+    val paths = System.getenv("PATH")
+        .split(File.pathSeparatorChar)
+        .toMutableList()
+        .apply {
+            add(".")
+            add("")
+        }
+    return ExternalCommandEnvironment(paths)
 }
 
 internal fun getBuiltinCommandEnvironment(): CommandEnvironment {
