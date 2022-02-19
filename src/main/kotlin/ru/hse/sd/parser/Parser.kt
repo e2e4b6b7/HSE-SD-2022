@@ -1,7 +1,7 @@
 package ru.hse.sd.parser
 
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.*
+import org.antlr.v4.runtime.misc.ParseCancellationException
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.TerminalNode
 import ru.hse.sd.merge
@@ -15,12 +15,16 @@ class Parser {
      *
      * [code] `SShell` code
      */
-    fun parse(code: String): List<PreStatement> {
+    fun parse(code: String): List<PreStatement>? = try {
         val charStream = CharStreams.fromString(code)
         val lexer = SShellLex(charStream)
+        lexer.addErrorListener(ThrowingErrorListener)
         val tokensStream = CommonTokenStream(lexer)
         val parser = SShellParse(tokensStream)
-        return parser.prog().stmt()
+        parser.addErrorListener(ThrowingErrorListener)
+        parser.prog().stmt()
+    } catch (e: ParseCancellationException) {
+        null
     }
 
     /**
@@ -44,6 +48,9 @@ class Parser {
         return null
     }
 
+    /**
+     * Iterates over the children of the cmd and dispatch them to related functions.
+     */
     private inline fun iterateCmd(
         children: List<ParseTree>,
         onQuote: (SShellParse.QuoteContext) -> Unit,
@@ -64,6 +71,9 @@ class Parser {
         onDelimiter()
     }
 
+    /**
+     * Split and merge parsed elements into command tokens.
+     */
     private fun transformCmd(cmd: SShellParse.CmdContext, variables: Map<String, String>): CommandRun? {
         val children = cmd.children ?: return null
 
@@ -119,6 +129,9 @@ class Parser {
         return values.merge()
     }
 
+    /**
+     * Get textual value of terminal token.
+     */
     private fun text(node: TerminalNode, variables: Map<String, String>): String {
         return when (node.symbol.type) {
             SShellParse.String -> {

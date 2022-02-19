@@ -7,7 +7,7 @@ internal class ParserTest {
 
     private fun checkParser(input: String, expected: List<Statement>, variables: Map<String, String> = emptyMap()) {
         val parser = Parser()
-        assertEquals(expected, parser.parse(input).map { parser.subst(it, variables) })
+        assertEquals(expected, parser.parse(input)!!.map { parser.subst(it, variables) })
     }
 
     @Test
