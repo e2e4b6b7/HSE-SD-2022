@@ -25,7 +25,8 @@ class SShell(
      */
     fun start() {
         while (true) {
-            val program = parser.parse(userInteraction.read())
+            val input = userInteraction.read() ?: break
+            val program = parser.parse(input)
             for (statement in program) {
                 val result = runner.run(statement, io)
                 if (result) return
