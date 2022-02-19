@@ -2,6 +2,7 @@ package ru.hse.sd.parser
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.TerminalNode
 import ru.hse.sd.merge
 import ru.hse.sd.parser.antlr.SShellLex
@@ -43,32 +44,44 @@ class Parser {
         return null
     }
 
+    private inline fun iterateCmd(
+        children: List<ParseTree>,
+        onQuote: (SShellParse.QuoteContext) -> Unit,
+        onTerminal: (TerminalNode) -> Unit,
+        onDelimiter: () -> Unit
+    ) {
+        for (child in children) {
+            when (child) {
+                is TerminalNode ->
+                    if (child.symbol.type == SShellParse.Whitespace)
+                        onDelimiter()
+                    else
+                        onTerminal(child)
+                is SShellParse.QuoteContext ->
+                    onQuote(child)
+            }
+        }
+        onDelimiter()
+    }
+
     private fun transformCmd(cmd: SShellParse.CmdContext, variables: Map<String, String>): CommandRun? {
         val children = cmd.children ?: return null
 
         val values = mutableListOf<String>()
         val lastValue = mutableListOf<String>()
-        for (child in children) {
-            when (child) {
-                is TerminalNode -> {
-                    when (child.symbol.type) {
-                        SShellParse.Whitespace -> {
-                            if (lastValue.isNotEmpty()) {
-                                values.add(lastValue.merge())
-                                lastValue.clear()
-                            }
-                        }
-                        else -> lastValue.add(text(child, variables))
-                    }
+        iterateCmd(children,
+            onQuote = { quote ->
+                lastValue.add(transformQuote(quote, variables))
+            },
+            onTerminal = { terminal ->
+                lastValue.add(text(terminal, variables))
+            },
+            onDelimiter = {
+                if (lastValue.isNotEmpty()) {
+                    values.add(lastValue.merge())
+                    lastValue.clear()
                 }
-                is SShellParse.QuoteContext -> {
-                    lastValue.add(transformQuote(child, variables))
-                }
-            }
-        }
-        if (lastValue.isNotEmpty()) {
-            values.add(lastValue.merge())
-        }
+            })
 
         if (values.isEmpty()) return null
 
@@ -98,7 +111,7 @@ class Parser {
     private fun transformQuote(quote: SShellParse.QuoteContext, variables: Map<String, String>): String {
         val values = mutableListOf<String>()
         val children = quote.children
-        check(children.size > 2) { "At least left and right quotes expected as children" }
+        check(children.size >= 2) { "At least left and right quotes expected as children" }
         for (child in children.subList(1, children.size - 1)) {
             check(child is TerminalNode) { "Unknown node for quote node" }
             values.add(text(child, variables))
