@@ -8,12 +8,9 @@ import java.io.File
 import java.io.InputStream
 
 internal fun getExternalCommandEnvironment(): CommandEnvironment {
-    val paths = System.getenv("PATH")
-        .split(File.pathSeparatorChar)
-        .toMutableList()
-        .apply {
-            add(0,".")
-        }
+    val paths = sequenceOf(".").plus(
+        System.getenv("PATH").splitToSequence(File.pathSeparatorChar)
+    ).toList()
     return ExternalCommandEnvironment(paths)
 }
 

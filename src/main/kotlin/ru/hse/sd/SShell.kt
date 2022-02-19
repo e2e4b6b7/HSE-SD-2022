@@ -25,7 +25,8 @@ class SShell(
      */
     fun start() {
         while (true) {
-            val program = parser.parse(userInteraction.read())
+            val input = userInteraction.read() ?: break
+            val program = parser.parse(input)
             for (preStatement in program) {
                 val statement = parser.subst(preStatement, varEnv.mapView)
                 val result = runner.run(statement, io)

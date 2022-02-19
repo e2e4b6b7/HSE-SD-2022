@@ -13,9 +13,9 @@ class UserInteraction(
     private val inputStream = inputStream.bufferedReader()
 
     /** Prints CLI prefix and reads string */
-    fun read(): String {
+    fun read(): String? {
         outputStream.write(COMMAND_LINE_PREFIX)
-        return inputStream.readLine() ?: ""
+        return inputStream.readLine()
     }
 
     companion object {
