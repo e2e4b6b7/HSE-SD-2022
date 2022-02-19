@@ -97,7 +97,9 @@ class Parser {
 
     private fun transformQuote(quote: SShellParse.QuoteContext, variables: Map<String, String>): String {
         val values = mutableListOf<String>()
-        for (child in quote.children.subList(1, quote.children.size - 1)) {
+        val children = quote.children
+        check(children.size > 2) { "At least left and right quotes expected as children" }
+        for (child in children.subList(1, children.size - 1)) {
             check(child is TerminalNode) { "Unknown node for quote node" }
             values.add(text(child, variables))
         }
