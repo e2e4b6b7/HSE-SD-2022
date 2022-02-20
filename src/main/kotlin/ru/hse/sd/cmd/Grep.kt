@@ -18,10 +18,9 @@ object Grep : Command {
      * -A <number> -- print <number> lines after every matched line.
      */
     override fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
-        // TODO: parse arguments
-        val grepArgs = GrepArguments(args[0], args.getOrNull(1))
+        val grepArgs = parse(args.toTypedArray())
 
-        val pattern = grepArgs.pattern.toRegex(grepArgs.toRegexOptions())
+        val pattern = grepArgs.pattern.toRegex(grepArgs.regexOptions())
         val inputLines = if (grepArgs.filePath != null) {
             checkedFile(grepArgs.filePath, io.errorStream::write)?.readLines() ?: listOf()
         } else {
@@ -47,25 +46,13 @@ object Grep : Command {
                 io.outputStream.write("$line\n")
         }
 
-    return ReturnCode.success
-}
+        return ReturnCode.success
+    }
 
-private fun GrepArguments.toRegexOptions(): Set<RegexOption> {
-    val regexOptions = mutableSetOf<RegexOption>()
-    if (ignoreCase)
-        regexOptions.add(RegexOption.IGNORE_CASE)
-    return regexOptions
-}
+    private fun GrepArguments.regexOptions(): Set<RegexOption> =
+        mutableSetOf<RegexOption>().apply {
+            if (ignoreCase) add(RegexOption.IGNORE_CASE)
+        }
 
-private fun Char.isNonWordConstituent(): Boolean {
-    return !this.isLetterOrDigit() && this != '_'
-}
-
-private data class GrepArguments(
-    val pattern: String,
-    val filePath: String? = null,
-    val wholeWord: Boolean = false,
-    val ignoreCase: Boolean = false,
-    val numOfLinesAfterMatched: Int = 0
-)
+    private fun Char.isNonWordConstituent() = !isLetterOrDigit() && this != '_'
 }

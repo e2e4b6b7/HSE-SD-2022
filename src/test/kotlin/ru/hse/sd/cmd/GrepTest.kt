@@ -73,7 +73,7 @@ internal class GrepTest {
     @Test
     fun `test -i option`() {
         val inputLine = "Hello Real"
-        testSuccessGrepCall(inputLine, listOf("-w", "real"), "$inputLine\n")
+        testSuccessGrepCall(inputLine, listOf("-i", "real"), "$inputLine\n")
     }
 
     @Test
