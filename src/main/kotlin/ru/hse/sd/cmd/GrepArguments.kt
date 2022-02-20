@@ -2,11 +2,19 @@ package ru.hse.sd.cmd
 
 import kotlinx.cli.*
 
+/**
+ * Data class representing arguments for [Grep] command.
+ */
 data class GrepArguments(
+    /** Pattern specified by the regular expression*/
     val pattern: String,
+    /** Input file. If file isn't provided, input from io stream is used */
     val filePath: String?,
+    /** Search the whole word (substring separated by non-word constituent characters) */
     val wholeWord: Boolean,
+    /** Case-insensitive search */
     val ignoreCase: Boolean,
+    /** How many lines need to print after every matched line */
     val numOfLinesAfterMatched: Int
 )
 
