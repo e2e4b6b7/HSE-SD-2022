@@ -9,7 +9,7 @@ class SShell(
     /** Environments of commands, where calling commands are searched */
     cmdEnv: List<CommandEnvironment>,
     /** Contains all environment variables */
-    varEnv: VariableEnvironment,
+    private val varEnv: VariableEnvironment,
     /** Class, which interacts with user */
     private val userInteraction: UserInteraction,
     /** Query parser */
@@ -26,8 +26,9 @@ class SShell(
     fun start() {
         while (true) {
             val input = userInteraction.read() ?: break
-            val program = parser.parse(input)
-            for (statement in program) {
+            val program = parser.parse(input) ?: continue
+            for (preStatement in program) {
+                val statement = parser.subst(preStatement, varEnv.mapView)
                 val result = runner.run(statement, io)
                 if (result) return
             }
