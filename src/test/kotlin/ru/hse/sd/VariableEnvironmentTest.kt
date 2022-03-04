@@ -2,6 +2,7 @@ package ru.hse.sd
 
 import org.junit.jupiter.api.Test
 import ru.hse.sd.env.VariableEnvironment
+import java.nio.file.Path
 import kotlin.test.assertEquals
 
 internal class VariableEnvironmentTest {
@@ -77,5 +78,27 @@ internal class VariableEnvironmentTest {
         env.remove("var1")
         map.remove("var1")
         assertEquals(map, env.mapView)
+    }
+
+    @Test
+    fun `get working directory`() {
+        val env = VariableEnvironment()
+        assertEquals(Path.of("").toAbsolutePath(), env.getWorkingDirectory())
+    }
+
+    @Test
+    fun `reset working directory`() {
+        val env = VariableEnvironment()
+        env.changeWorkingDirectory(Path.of("src")) { a -> println(a) }
+        env.resetWorkingDirectory()
+        assertEquals(Path.of("").toAbsolutePath(), env.getWorkingDirectory())
+    }
+
+    @Test
+    fun `change working directory`() {
+        val env = VariableEnvironment()
+        val path = Path.of("src")
+        env.changeWorkingDirectory(path) { a -> println(a) }
+        assertEquals(Path.of("").toAbsolutePath().resolve(path).normalize(), env.getWorkingDirectory())
     }
 }
