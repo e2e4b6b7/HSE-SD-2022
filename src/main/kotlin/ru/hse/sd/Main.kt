@@ -22,6 +22,7 @@ internal fun getBuiltinCommandEnvironment(): CommandEnvironment {
     cmdEnv.registerCommand("cat", Cat)
     cmdEnv.registerCommand("wc", WordCount)
     cmdEnv.registerCommand("cd", Cd)
+    cmdEnv.registerCommand("ls", Ls)
     return cmdEnv
 }
 
