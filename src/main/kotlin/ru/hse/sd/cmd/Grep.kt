@@ -1,8 +1,8 @@
 package ru.hse.sd.cmd
 
-import ru.hse.sd.IO
-import ru.hse.sd.write
+import ru.hse.sd.*
 import java.nio.charset.StandardCharsets
+import java.util.regex.PatternSyntaxException
 
 /** `grep` CLI command implementation */
 object Grep : Command {
@@ -18,9 +18,20 @@ object Grep : Command {
      * -A <number> -- print <number> lines after every matched line.
      */
     override fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult {
-        val grepArgs = parse(args.toTypedArray())
+        val grepArgs = try {
+            parse(args.toTypedArray())
+        } catch (e: Exception) {
+            io.errorStream.write("Error in parsing arguments: ${e.message}")
+            return ReturnCode.success
+        }
 
-        val pattern = grepArgs.pattern.toRegex(grepArgs.regexOptions())
+        val pattern = try {
+            grepArgs.pattern.toRegex(grepArgs.regexOptions())
+        } catch (e: PatternSyntaxException) {
+            io.errorStream.write("Error in regular exception: ${e.message}")
+            return ReturnCode.success
+        }
+
         val inputLines = if (grepArgs.filePath != null) {
             checkedFile(grepArgs.filePath, io.errorStream::write)?.readLines() ?: listOf()
         } else {
