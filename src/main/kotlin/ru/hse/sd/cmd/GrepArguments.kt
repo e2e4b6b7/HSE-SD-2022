@@ -38,5 +38,6 @@ fun parse(input: Array<String>): GrepArguments {
         .option(ArgType.Int, shortName = "A", description = "Count of lines after match to print")
         .default(0)
     parser.parse(input)
+    require(numOfLinesAfterMatched >= 0)
     return GrepArguments(pattern, file, fullLine, ignoreCase, numOfLinesAfterMatched)
 }

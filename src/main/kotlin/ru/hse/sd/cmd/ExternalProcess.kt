@@ -20,6 +20,7 @@ class ExternalProcess(
             environment().putAll(env)
         }.start()
         io.inputStream.transferTo(process.outputStream)
+        process.outputStream.close()
         process.waitFor()
         process.inputStream.transferTo(io.outputStream)
         process.errorStream.transferTo(io.errorStream)
