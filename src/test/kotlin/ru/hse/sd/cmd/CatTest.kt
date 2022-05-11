@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hse.sd.TmpFile
 
-class CatTest {
+internal class CatTest {
 
     @Test
     fun `test cat with io argument`() {

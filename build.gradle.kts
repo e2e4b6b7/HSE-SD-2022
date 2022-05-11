@@ -17,6 +17,7 @@ repositories {
 
 dependencies {
     antlr("org.antlr", "antlr4", "4.9.3")
+    implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.3.4")
     testImplementation(kotlin("test"))
     testImplementation("org.apache.commons", "commons-lang3", "3.12.0")
 }
@@ -65,8 +66,8 @@ tasks.test {
                         val repeatLength = startItem.length + output.length + endItem.length
                         println(
                             "\n" + "-".repeat(repeatLength) + "\n" +
-                            startItem + output + endItem + "\n" +
-                            "-".repeat(repeatLength)
+                                startItem + output + endItem + "\n" +
+                                "-".repeat(repeatLength)
                         )
                     }
                 }

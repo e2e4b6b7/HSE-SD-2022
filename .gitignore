@@ -1,6 +1,6 @@
 ## IDEA ANTLR4 plugin
-**/gen
-**/*.tokens
+gen/
+*.tokens
 
 ##############################
 ## Java
