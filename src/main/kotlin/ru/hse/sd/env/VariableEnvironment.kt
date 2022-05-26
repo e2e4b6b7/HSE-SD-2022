@@ -58,7 +58,7 @@ class VariableEnvironment() {
      * Sets the initial working directory.
      */
     fun resetWorkingDirectory() {
-        workingDirectory = Path.of("").toAbsolutePath()
+        workingDirectory = Path.of(System.getProperty("user.home"))
     }
 
     /**
@@ -67,8 +67,8 @@ class VariableEnvironment() {
      */
     fun changeWorkingDirectory(path: Path, onError: (String) -> Unit): Path? {
         val newWorkingDirectory = workingDirectory.resolve(path).normalize()
-        return if (!Files.exists(newWorkingDirectory)) {
-            onError("No such file $path\n")
+        return if (!Files.isDirectory(newWorkingDirectory)) {
+            onError("No such directory $path\n")
             null
         } else {
             workingDirectory = newWorkingDirectory

@@ -11,7 +11,7 @@ class CdTest {
     fun `test cd with 0 arguments`() {
         val testIO = IO("some input")
         val cmdRes = Cd.execute(VariableEnvironment(), emptyList(), testIO)
-        testIO.checkStreams(Path.of("").toAbsolutePath().toString() + "\n", "")
+        testIO.checkStreams(System.getProperty("user.home") + "\n", "")
         Assertions.assertEquals(ReturnCode.success, cmdRes)
     }
 
@@ -33,11 +33,19 @@ class CdTest {
     }
 
     @Test
-    fun `test cd with a non-existent file`() {
+    fun `test cd with a non-existent directory`() {
         val testIO = IO("some input")
         val cmdRes = Cd.execute(VariableEnvironment(), listOf("file"), testIO)
         Assertions.assertEquals(ReturnCode(1), cmdRes)
-        testIO.checkStreams("", "No such file file\n")
+        testIO.checkStreams("", "No such directory file\n")
+    }
+
+    @Test
+    fun `test cd to file`() {
+        val testIO = IO("some input")
+        val cmdRes = Cd.execute(VariableEnvironment(), listOf("README.md"), testIO)
+        Assertions.assertEquals(ReturnCode(1), cmdRes)
+        testIO.checkStreams("", "No such directory README.md\n")
     }
 
     @Test

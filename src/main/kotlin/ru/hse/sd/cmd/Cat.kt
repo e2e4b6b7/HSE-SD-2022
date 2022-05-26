@@ -13,7 +13,8 @@ object Cat : Command {
      */
     override fun execute(env: VariableEnvironment, args: List<String>, io: IO): CommandResult {
         if (args.isNotEmpty()) {
-            val file = checkedFile(args[0], io.errorStream::write) ?: return ReturnCode(1)
+            val filePath = env.getWorkingDirectory().resolve(args[0])
+            val file = checkedFile(filePath.toString(), io.errorStream::write) ?: return ReturnCode(1)
             io.outputStream.write(file.readBytes())
             return ReturnCode.success
         }
