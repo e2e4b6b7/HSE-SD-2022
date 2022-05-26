@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hse.sd.env.VariableEnvironment
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
+import java.nio.file.*
 import java.util.*
 
 class LsTest {
@@ -43,16 +42,16 @@ class LsTest {
 
     @Test
     fun `test ls with 1 argument`() {
-        val dirPath: Path  = Files.createTempDirectory("tmpDir")
-        val filename1 = Files.createTempFile(dirPath, "file1", ".txt").fileName
-        val filename2 = Files.createTempFile(dirPath, "file2", ".txt").fileName
+        val dirPath: Path = Files.createTempDirectory(Paths.get(""), "tmpDir")
+        val file1 = Files.createTempFile(dirPath, "file1", ".txt")
+        val file2 = Files.createTempFile(dirPath, "file2", ".txt")
         val testIO = IO("some input")
         val lsRes = Ls.execute(VariableEnvironment(), listOf(dirPath.toString()), testIO)
-        testIO.checkStreams("$filename1\n$filename2\n", "")
+        testIO.checkStreams("${file1.fileName}\n${file2.fileName}\n", "")
         Assertions.assertEquals(ReturnCode.success, lsRes)
-        dirPath.toFile().deleteOnExit()
-        filename1.toFile().deleteOnExit()
-        filename2.toFile().deleteOnExit()
+        Files.delete(file1)
+        Files.delete(file2)
+        Files.delete(dirPath)
     }
 
     @Test
@@ -65,27 +64,28 @@ class LsTest {
 
     @Test
     fun `test ls empty directory`() {
-        val dirPath: Path  = Files.createTempDirectory("tmpDir")
+        val dirPath: Path = Files.createTempDirectory(Paths.get(""), "tmpDir")
+        println("DirPath: '${dirPath}'")
         val testIO = IO("some input")
         val lsRes = Ls.execute(VariableEnvironment(), listOf(dirPath.toString()), testIO)
         testIO.checkStreams("", "")
         Assertions.assertEquals(ReturnCode.success, lsRes)
-        dirPath.toFile().deleteOnExit()
+        Files.delete(dirPath)
     }
 
     @Test
     fun `test ls with path`() {
-        val dirPath1: Path  = Files.createTempDirectory("tmpDir")
-        val dirPath2: Path  = Files.createTempDirectory(dirPath1, "tmpDir")
-        val filename1 = Files.createTempFile(dirPath2, "file1", ".txt").fileName
-        val filename2 = Files.createTempFile(dirPath2, "file2", ".txt").fileName
+        val dirPath1: Path = Files.createTempDirectory(Paths.get(""), "tmpDir")
+        val dirPath2: Path = Files.createTempDirectory(dirPath1, "tmpDir")
+        val file1 = Files.createTempFile(dirPath2, "file1", ".txt")
+        val file2 = Files.createTempFile(dirPath2, "file2", ".txt")
         val testIO = IO("some input")
         val lsRes = Ls.execute(VariableEnvironment(), listOf(dirPath2.toString()), testIO)
-        testIO.checkStreams("$filename1\n$filename2\n", "")
+        testIO.checkStreams("${file1.fileName}\n${file2.fileName}\n", "")
         Assertions.assertEquals(ReturnCode.success, lsRes)
-        dirPath1.toFile().deleteOnExit()
-        dirPath2.toFile().deleteOnExit()
-        filename1.toFile().deleteOnExit()
-        filename2.toFile().deleteOnExit()
+        Files.delete(file1)
+        Files.delete(file2)
+        Files.delete(dirPath2)
+        Files.delete(dirPath1)
     }
 }

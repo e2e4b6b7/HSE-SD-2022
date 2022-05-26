@@ -4,8 +4,7 @@ import ru.hse.sd.IO
 import ru.hse.sd.env.VariableEnvironment
 import ru.hse.sd.write
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
+import java.nio.file.*
 import java.util.*
 
 
@@ -23,16 +22,16 @@ object Ls : Command {
         val path: Path = if (args.isEmpty()) {
             env.getWorkingDirectory()
         } else if (args.size == 1) {
-            Path.of(args[0])
+            Paths.get(env.getWorkingDirectory().toString(), args[0])
         } else {
             io.errorStream.write("Too many arguments\n")
             return ReturnCode(1)
         }
         if (!Files.exists(path)) {
-            io.errorStream.write("ls: cannot access '$path': No such file or directory\n")
+            io.errorStream.write("ls: cannot access '${path.fileName}': No such file or directory\n")
             return ReturnCode(1)
         } else if (!Files.isDirectory(path)) {
-            io.outputStream.write(path.toString() + "\n")
+            io.outputStream.write(path.fileName.toString() + "\n")
         } else {
             val files = File(path.toString()).listFiles()
             Arrays.sort(files)
