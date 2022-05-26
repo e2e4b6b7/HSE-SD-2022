@@ -15,7 +15,7 @@ object WordCount : Command {
     override fun execute(env: VariableEnvironment, args: List<String>, io: IO): CommandResult {
         val str =
             if (args.isNotEmpty()) {
-                val file = checkedFile(args[0], io.errorStream::write) ?: return ReturnCode(1)
+                val file = checkedFile(env, args[0], io.errorStream::write) ?: return ReturnCode(1)
                 String(file.readBytes(), StandardCharsets.UTF_8)
             } else {
                 String(io.inputStream.readAllBytes(), StandardCharsets.UTF_8)
