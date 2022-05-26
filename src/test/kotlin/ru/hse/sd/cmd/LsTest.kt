@@ -35,7 +35,6 @@ class LsTest {
         for (file in files) {
             result.append(file.name).append("\n")
         }
-        System.out.println(result.toString())
         testIO.checkStreams(result.toString(), "")
         Assertions.assertEquals(ReturnCode.success, lsRes)
     }
