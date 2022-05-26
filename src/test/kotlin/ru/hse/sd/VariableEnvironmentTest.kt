@@ -91,7 +91,7 @@ internal class VariableEnvironmentTest {
         val env = VariableEnvironment()
         env.changeWorkingDirectory(Path.of("src")) { a -> println(a) }
         env.resetWorkingDirectory()
-        assertEquals(Path.of("").toAbsolutePath(), env.getWorkingDirectory())
+        assertEquals(Path.of(System.getProperty("user.home")), env.getWorkingDirectory())
     }
 
     @Test
