@@ -1,10 +1,17 @@
 package ru.hse.sd.env
 
+import java.nio.file.Files
+import java.nio.file.Path
 /**
  * Environment contains all variable defined in scope.
  */
 class VariableEnvironment() {
     private val nameToValue = mutableMapOf<String, String>()
+
+    /**
+     * Current working directory.
+     */
+    private var workingDirectory: Path = Path.of("").toAbsolutePath()
 
     private constructor(initial: Map<String, String>) : this() {
         nameToValue.putAll(initial)
@@ -41,4 +48,31 @@ class VariableEnvironment() {
      * Immutable map view on all variables visible in current environment.
      */
     val mapView: Map<String, String> = nameToValue
+
+    /**
+     * Gets current working directory.
+     */
+    fun getWorkingDirectory(): Path = workingDirectory
+
+    /**
+     * Sets the initial working directory.
+     */
+    fun resetWorkingDirectory() {
+        workingDirectory = Path.of(System.getProperty("user.home"))
+    }
+
+    /**
+     * Changes the current directory depending on the path.
+     * If no such path exists, then returns null.
+     */
+    fun changeWorkingDirectory(path: Path, onError: (String) -> Unit): Path? {
+        val newWorkingDirectory = workingDirectory.resolve(path).normalize()
+        return if (!Files.isDirectory(newWorkingDirectory)) {
+            onError("No such directory $path\n")
+            null
+        } else {
+            workingDirectory = newWorkingDirectory
+            workingDirectory
+        }
+    }
 }

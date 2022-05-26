@@ -63,7 +63,7 @@ class Runner(
         when (task) {
             is CommandRun -> {
                 val command = cmdEnv.firstNotNullOfOrNull { it.getCommand(task.name) } ?: return null
-                return command.execute(varEnv.mapView, task.args, io)
+                return command.execute(varEnv, task.args, io)
             }
             is Assignment -> {
                 varEnv[task.varName] = task.value

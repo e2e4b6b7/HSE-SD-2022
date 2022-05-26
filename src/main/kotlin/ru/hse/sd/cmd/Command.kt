@@ -1,6 +1,7 @@
 package ru.hse.sd.cmd
 
 import ru.hse.sd.IO
+import ru.hse.sd.env.VariableEnvironment
 
 /** Command from CLI representation */
 interface Command {
@@ -10,5 +11,5 @@ interface Command {
      * [args] contains arguments for command.
      * [io] contains streams for input, output and errors.
      */
-    fun execute(env: Map<String, String>, args: List<String>, io: IO): CommandResult
+    fun execute(env: VariableEnvironment, args: List<String>, io: IO): CommandResult
 }
